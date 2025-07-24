@@ -1,22 +1,45 @@
-# Problem Statement
-Your task is to transform and analyze the Global Terrorism Database (GTD) Sample dataset using Databricks to uncover insights into terrorist activities worldwide from 1970 to 2017. You will clean the dataset to handle missing or inconsistent data, aggregate statistics to identify patterns in attack frequency and casualties, and join with a derived region summary table to enrich your analysis. The goal is to answer key questions about regional terrorism trends, providing a foundation for understanding global security dynamics through data wrangling techniques.
+### How has the frequency of terrorist attacks changed over time globally, and which year recorded the highest number of incidents?
 
-# Questions
-## Data Cleaning: 
-How can you handle missing values in the latitude, longitude, and city columns, and what impact does this have on the dataset's usability for geographic analysis?
-## Aggregation: 
-Which regions have experienced the highest number of terrorist attacks per year, and what are the total casualties (fatalities plus wounded) associated with these attacks?
-## Derived Table and Joining: 
-How can you create a derived table summarizing average annual attacks and total casualties by region, and what new insights emerge when you join this table with the main dataset?
-## Pivoting and Analysis: 
-How do the frequencies of different attack types (e.g., Bombing, Armed Assault) vary across regions, and which attack type is most common in the region with the highest attack count?
-## Unpivoting and Flexibility: 
-After pivoting attack counts by region and attack type, how can unpivoting the data help you compare trends across all regions and attack types in a single analysis?
-## Trend Identification: 
-Which regions show the most significant increase in attack frequency or casualties over the decades (e.g., 1970s vs. 2010s), and what might this suggest about changing terrorism patterns?
+**Process:**  
+- Load the dataset  
+- Clean missing or invalid `iyear` values by filtering out nulls and ensuring valid years (e.g., 1970–2017)  
+- Aggregate the total number of attacks per year  
+- Identify the year with the peak attack count
 
-# Guidance for Users
-Dataset Source: Download the dataset from https://www.kaggle.com/datasets/START-UMD/gtd and upload it to your Databricks file system as globalterrorismdb_0718dist.csv.
-Tools: Use the provided PySpark code as a starting point, modifying it to address the questions above.
-Output: Save your transformed tables (e.g., terrorism_pivot, terrorism_unpivot, terrorism_region_trends) and use Databricks’ display() function to visualize results, such as bar charts or line plots.
-Extension: Explore additional questions, like analyzing trends by country_txt or success of attacks, to deepen your analysis.
+---
+
+### Which region has been the most affected by terrorist attacks in terms of total incidents, and how does this compare to the region with the highest casualty count (fatalities plus wounded)?
+
+**Process:**  
+- Clean missing values in `nkill` and `nwound` by imputing with 0 where necessary  
+- Aggregate the total number of attacks and total casualties (`nkill` + `nwound`) by `region_txt`  
+- Compare the rankings of regions by these metrics
+
+---
+
+### What are the most common target types for terrorist attacks worldwide, and how can you determine which target type has caused the greatest number of casualties?
+
+**Process:**  
+- Address inconsistencies in `target1` (e.g., handle missing or malformed entries by imputing with "Unknown")  
+- Aggregate the count of attacks by `target1`  
+- Calculate total casualties by `target1` to identify the most impacted target type
+
+---
+
+### Which attack type has been the most prevalent globally, and how does its distribution vary across the top three regions by attack frequency?
+
+**Process:**  
+- Clean potential inconsistencies in `attacktype1_txt` (e.g., standardize case or handle missing values with "Unknown")  
+- Aggregate the count of attacks by `attacktype1_txt`  
+- Derive a table of top three regions by total attacks  
+- Join this with the main dataset to analyze the distribution of attack types
+
+---
+
+### How can you identify the cities with the highest number of attacks, and what additional insights can you gain by linking this data with regional casualty trends?
+
+**Process:**  
+- Clean missing city values by imputing with "Unknown"  
+- Aggregate the total number of attacks by city  
+- Create a derived table summarizing total casualties by `region_txt`  
+- Join this with the city-level data to explore correlations between attack frequency and regional casualty rates
